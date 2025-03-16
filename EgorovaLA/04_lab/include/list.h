@@ -1,4 +1,4 @@
-#pragma once// нет вставки до, вставки после, поиск элемента
+#pragma once
 
 #include <iostream>
 
@@ -6,13 +6,11 @@ using namespace std;
 
 template <typename T>
 struct TNode {
-    T Data;
+    T Data; //будет содержать моном
     TNode* pNext;
-    int Key;
 
-    TNode() : Data(-1), pNext(nullptr), key(0) {}
-    TNode(const T& data) : Data(data), pNext(nullptr), Key(0) {}
-    TNode(const T& data, const int key) : Data(data), pNext(nullptr), Key(key) {}
+    TNode() : Data(), pNext(nullptr){}
+    TNode(const T& data) : Data(data), pNext(nullptr) {}
 };
 
 template <typename T>//обновленный TList
@@ -25,8 +23,8 @@ protected:
 public:
     TList() : pFirst(nullptr), pCurr(nullptr), pPrev(nullptr), pStop(nullptr) {}
 
-    TList(const T& data, const int key):pPrev(nullptr){
-        pFirst = new TNode<T>(data, key);
+    TList(const T& data):pPrev(nullptr){
+        pFirst = new TNode<T>(data);
         reset();
         pStop = pFirst;
     }
@@ -37,7 +35,7 @@ public:
             return;
         }
 
-        pFirst = new TNode<T>(list.pFirst->Data, list.pFirst->Key);
+        pFirst = new TNode<T>(list.pFirst->Data);
         reset();
         pStop = pFirst;
 
@@ -45,7 +43,7 @@ public:
 
         while (listcurr != list.pStop) {
             next();
-            pCurr = new TNode<T>(listcurr->Data, listcurr->Key);
+            pCurr = new TNode<T>(listcurr->Data);
             pStop = pCurr;
             listcurr = listcurr->pNext;
         }
@@ -63,6 +61,7 @@ public:
             delete pFirst;
             pFirst = pCurr;
         }
+        pFirst = nullptr;
     }
 
     const TList<T>& operator=(const TList& list) {
@@ -72,21 +71,22 @@ public:
 
         this->~TList();
 
+        if (list.IsEmpty()) return *this;
+
         TNode<T>* listcurr = list.pFirst;
 
-        while (listcurr != list.pStop) {
-            pushFront(listcurr->Data, listcurr->Key);
+        while (listcurr != list.pStop->pNext) {
+            pushBack(listcurr->Data);
             listcurr = listcurr->pNext;
         }
         return *this;
     }
 
     bool operator==(const TList<T>& list) const {
-        if (size() != list.size()) return 0;
         TNode<T>* curr = pFirst;
         TNode<T>* listcurr = list.pFirst;
         while (listcurr!=list.pStop) {
-            if ((curr->Data != listcurr->Data)||(curr->Key != listcurr->Key)) {
+            if (curr->Data != listcurr->Data) {
                 return 0;
             }
             curr = curr->pNext;
@@ -102,11 +102,11 @@ public:
             n++;
             curr = curr->pNext;
         }
-        return n+1;//+1 за pStop
+        return n+1;
     }
 
-    virtual void pushFront(const T& data, const int key) {
-        TNode<T>* node = new TNode<T>(data,key);
+    virtual void pushFront(const T& data) {
+        TNode<T>* node = new TNode<T>(data);
         if (pFirst == nullptr) {
             pFirst = node;
             pStop = pFirst;
@@ -120,8 +120,8 @@ public:
         pStop = pFirst->pNext;
     }
 
-    virtual void pushBack(const T& data, const int key) {
-        TNode<T>* node = new TNode<T>(data, key);
+    virtual void pushBack(const T& data) {
+        TNode<T>* node = new TNode<T>(data);
         if (pFirst == nullptr) {
             pFirst = node;
             pStop = pFirst;
@@ -159,11 +159,27 @@ public:
     }
 
     virtual bool IsEmpty() const {
-        return pFirst == nullptr;
+        return pStop == nullptr;
     }
 
     TNode<T>* getPFirst() const {
         return pFirst;
+    }
+
+    TNode<T>* getPStop() const {
+        return pStop;
+    }
+
+    TNode<T>* getPPrev() const {
+        return pPrev;
+    }
+
+    TNode<T>* getPCurr() const {
+        return pCurr;
+    }
+
+    void setPFirst(const T& data) {
+        pFirst = new TNode<T>(data);
     }
 
     void next() {
@@ -175,25 +191,26 @@ public:
         pCurr = pFirst;
         pPrev = nullptr;
     }
+
     bool IsEnded() {
         return(pCurr == pStop);
     }
 
-    void find_elem(int key) {
+    void find_elem(const T& key) { //по первому вхождению
         reset();
-        if (pFirst->Key == key) return;
+        if (pFirst->Data == key) return;
         while (!IsEnded()){
-            if (pCurr->Key == key) return;
+            if (pCurr->Data == key) return;
             next();
         }
         return;
     }
 
-    virtual void pushBefore(const T& data, const int key, const int place) {
+    virtual void pushBefore(const T& data, const T& place) {
         find_elem(place);
         if (pCurr == nullptr) throw "Not found key";
 
-        TNode<T>* node = new TNode<T>(data, key);
+        TNode<T>* node = new TNode<T>(data);
         if (pPrev == nullptr) {
             pFirst = node;
             pFirst->pNext = pCurr;
@@ -204,11 +221,11 @@ public:
         return;
     }
 
-    virtual void pushAfter(const T& data, const int key, const int place) {
+    virtual void pushAfter(const T& data, const T& place) {
         find_elem(place);
         if (pCurr == nullptr) throw "Not found key";
 
-        TNode<T>* node = new TNode<T>(data, key);
+        TNode<T>* node = new TNode<T>(data);
         next();
 
         pPrev->pNext = node;
@@ -216,8 +233,13 @@ public:
         pStop = pStop->pNext;
     }
 
-    T getData(int key) {
+    const T getData(const T& key) {
         find_elem(key);
+        return pCurr->Data;
+    }
+
+    const int getKey() {
+        find_elem(Data);
         return pCurr->Data;
     }
 };

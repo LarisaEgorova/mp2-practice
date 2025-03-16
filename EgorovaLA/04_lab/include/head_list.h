@@ -11,15 +11,10 @@ protected:
 public:
     THeadList() :TList(), pHead(nullptr){}
 
-    THeadList(const T& data, const int key): TList(data, key) {
-        if (key > 999 || key <= 0) {
-            if (pHead == nullptr) pHead = new TNode<T>(data, -1);
-            else pHead->Data = data;
-        }
-        else {
-            pHead = new TNode<T>(0, -1);
-        }
+    THeadList(const T& data): TList(data), pHead(nullptr) { 
+        if (pHead == nullptr) pHead = new TNode<T>();
         pHead->pNext = pFirst;
+        if (pFirst == nullptr) pStop = pHead;
         reset();
     }
 
@@ -28,7 +23,7 @@ public:
             pHead = nullptr;
             return;
         }
-        pHead = new TNode<T>(list.pHead->Data, list.pHead->Key);
+        pHead = new TNode<T>(list.pHead->Data);
         pHead->pNext = pFirst;
     }
 
@@ -41,71 +36,79 @@ public:
             return *this;
         }
 
-        if (pHead==nullptr) pHead = new TNode<T>(list.pHead->Data, list.pHead->Key);
+        if (pHead == nullptr) pHead = new TNode<T>(list.pHead->Data);
         else {
             pHead->Data = list.pHead->Data;
-            pHead->Key = list.pHead->Key;
         }
+
         TList<T>::operator=(list);
+
+        pHead->pNext = pFirst;
+
         return *this;
     }
 
     bool operator==(const THeadList<T>& list) const {
-        if ((pHead->Data != list.pHead->Data)&&(pHead->Key != list.pHead->Key)) return 0;
+        if (pHead->Data != list.pHead->Data) return 0;
         return (TList<T>::operator==(list));
     }
 
-    virtual void pushFront(const T& data, const int key) override {
-        TList<T>::pushFront(data, key);
-        if (pHead == nullptr) pHead = new TNode<T>(0, -1);
+    virtual void pushFront(const T& data) override {
+        TList<T>::pushFront(data);
+        if (pHead == nullptr) pHead = new TNode<T>();
         pHead->pNext = pFirst;
         return;
     }
 
-   virtual void pushBack(const T& data, const int key) override {
-       TList<T>::pushBack(data, key);
-       if (pHead == nullptr) pHead = new TNode<T>(0, -1);
+   virtual void pushBack(const T& data) override {
+       TList<T>::pushBack(data);
+       if (pHead == nullptr) pHead = new TNode<T>();
        pHead->pNext = pFirst;
        return;
     }
 
    virtual void PopBack() override {
        TList<T>::PopBack();
-       if (pHead == nullptr) pHead = new TNode<T>(0, -1);
+       if (pHead == nullptr) pHead = new TNode<T>();
        pHead->pNext = pFirst;
        return;
    }
 
    virtual void PopFront() override {
        TList<T>::PopFront();
-       if (pHead == nullptr) pHead = new TNode<T>(0, -1);
+       if (pHead == nullptr) pHead = new TNode<T>();
        pHead->pNext = pFirst;
        return;
    }
 
    virtual bool IsEmpty() const override {
-       return ((pFirst == nullptr)&&(pHead==nullptr));
+       return (TList<T>::IsEmpty());
    }
 
-   TNode<T>* getHead() {
+   TNode<T>* getHead() const {
        return pHead;
    }
 
-   virtual void pushBefore(const T& data, const int key, const int place) override {
-       TList<T>::pushBefore(data, key, place);
-       if (pHead == nullptr) pHead = new TNode<T>(0, -1);
+   virtual void pushBefore(const T& data, const T& place) override {
+       TList<T>::pushBefore(data, place);
+       if (pHead == nullptr) pHead = new TNode<T>();
        pHead->pNext = pFirst;
        return;
    }
 
-   virtual void pushAfter(const T& data, const int key, const int place) {
-       TList<T>::pushAfter(data, key, place);
-       if (pHead == nullptr) pHead = new TNode<T>(0, -1);
+   virtual void pushAfter(const T& data, const T& place) {
+       TList<T>::pushAfter(data, place);
+       if (pHead == nullptr) pHead = new TNode<T>();
        pHead->pNext = pFirst;
        return;
    }
 
    virtual int size() const override{
        return TList<T>::size() + 1;
+   }
+
+   void setPHead(const T& data) {
+       pHead = new TNode<T>(data);
+       pHead->pNext = pFirst;
    }
 };

@@ -1,6 +1,6 @@
 #include "postfix_form.h"
 
-void menu() {
+/*void menu() {
 	string str;
 	cout << "Введите арифметическое выражение\n";
 	cin >> str;
@@ -211,4 +211,4 @@ void manipulateList(const string& str1, map<string, double>&var) {
 	cout << "Ответ с введенными значениями: "<< calculate(stack3, stack2, var) << "\n";
 }
 
-
+*/
