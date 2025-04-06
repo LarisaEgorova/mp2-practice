@@ -360,7 +360,7 @@ public:
         return result;
     }
 
-    Polinom operator *(const Monom& monom) const {
+    Polinom operator *(const Monom& monom)  {
         Polinom result(*this);
         result.polinom.reset();
 

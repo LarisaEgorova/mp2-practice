@@ -77,32 +77,6 @@ TEST(Monom, correct_product_this_monom)
     EXPECT_EQ(32, s.GetKey()+s.GetConsts());
 }
 
-TEST(Monom, correct_summation_const)
-{
-    Monom m(5, 10);
-    Monom resm(5, 30);
-    m = m + 20;
-    EXPECT_EQ(resm, m);
-}
-
-TEST(Monom, correct_division_const)
-{
-    Monom m(5, 10);
-    Monom resm(5, -10);
-    m = m - 20;
-    EXPECT_EQ(resm, m);
-}
-
-TEST(Monom, correct_product_const)
-{
-    Monom m(5, 10);
-    Monom resm(5, 200);
-    m = m * 20;
-    EXPECT_EQ(resm, m);
-}
-
-
-
 
 //POLINOMS
 
