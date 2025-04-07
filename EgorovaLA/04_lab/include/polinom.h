@@ -143,8 +143,8 @@ public:
 
     friend ostream& operator << (ostream& out, Monom& m) {
         if ((m.consts != 0) && (m.consts != 1)) {
-            if (m.consts < 0) out << "(" << m.consts << ")"<<"*";
-            else out << m.consts << "*";
+            if (m.consts < 0) out << "(" << m.consts << ")";
+            else out << m.consts;
 
         }
         if (m.consts != 0) {
@@ -212,7 +212,8 @@ public:
                 i++;
             }
             Monom m(tmp);
-            if (m.GetKey() != 0) polinom.pushBack(m);
+            if (find_monom(m.GetKey())) polinom.getPCurr()->Data = polinom.getPCurr()->Data + m;
+            else if (m.GetKey() != 0) polinom.pushBack(m);
             else polinom.setHead(m);
             if (str[i] == '-') i -= 1;
             tmp.clear();
@@ -237,7 +238,8 @@ public:
     }
 
     bool find_monom(const int key) {
-        polinom.reset();
+        polinom.setPCurr(polinom.getHead());
+        if (polinom.getPCurr() == nullptr) return 0;
         if (polinom.getPCurr()->Data.GetKey() == key) return 1;
         while (!polinom.IsEnded()) {
             if (polinom.getPCurr()->Data.GetKey() == key) return 1;

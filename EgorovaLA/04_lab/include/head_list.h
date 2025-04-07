@@ -41,6 +41,7 @@ public:
         }
         TList<T>::operator=(list);
         pHead->pNext = pFirst;
+        if (pFirst == nullptr) pStop = pHead;
         return *this;
     }
 
@@ -89,6 +90,7 @@ public:
         if (pHead == nullptr) pHead = new TNode<T>(data);
         else pHead->Data = data;
         pHead->pNext = pFirst;
+        if (pFirst == nullptr) pStop = pHead;
     }
 
     virtual void pushBefore(const T& data, const T& place) override {

@@ -217,6 +217,7 @@ public:
 
     bool find_elem(const T& key) { //по первому вхождению
         reset(); 
+        if (pCurr == nullptr) return 0;
         if (pCurr->Data == key) return 1;
         while (!IsEnded()) {
             if (pCurr->Data == key) return 1;
