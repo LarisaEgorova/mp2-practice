@@ -6,12 +6,12 @@
 
 TEST(Monom, can_create_monom)
 {
-	ASSERT_NO_THROW(Monom s);
+    ASSERT_NO_THROW(Monom s);
 }
 
 TEST(Monom, can_create_Monom_with_parameters_int)
 {
-	ASSERT_NO_THROW(Monom list(5, 6));
+    ASSERT_NO_THROW(Monom list(5, 6));
 }
 
 TEST(Monom, can_create_Monom_with_parameters_string)
@@ -21,21 +21,21 @@ TEST(Monom, can_create_Monom_with_parameters_string)
 
 TEST(Monom, can_correct_create_Monom_with_parameters_string)
 {
-    Monom mon("x^2*20*z^3*-20*y^3*x^2");
-    Monom m(433, -400);
+    Monom mon("x^2*20*z^3*-20*y^3*x^2*-4");
+    Monom m(433, 1600);
     EXPECT_EQ(m, mon);
 }
 
 TEST(Monom, can_create_copied_monom)
 {
     Monom s;
-	ASSERT_NO_THROW(Monom s1(s));
+    ASSERT_NO_THROW(Monom s1(s));
 }
 
 TEST(Monom, copied_monom_is_equal_to_source_one)
 {
     Monom s, s1(s);
-	EXPECT_EQ(s, s1);
+    EXPECT_EQ(s, s1);
 }
 
 TEST(Monom, can_use_the_assignment_operator)
@@ -57,7 +57,7 @@ TEST(Monom, correct_summation_this_monom)
 {
     Monom a(1, 5);
     Monom s(1, 6);
-    s=s+a;
+    s = s + a;
     EXPECT_EQ(11, s.GetConsts());
 }
 
@@ -74,7 +74,7 @@ TEST(Monom, correct_product_this_monom)
     Monom a(1, 5);
     Monom s(1, 6);
     s = s * a;
-    EXPECT_EQ(32, s.GetKey()+s.GetConsts());
+    EXPECT_EQ(32, s.GetKey() + s.GetConsts());
 }
 
 
@@ -95,18 +95,18 @@ TEST(Polinom, can_create_polinom_this_parameters_ringheadlist)
 }
 
 TEST(Polinom, can_create_this_parameters_string) {
-    string str = "x^2*20*z^3*(-20)*y^3+x^3+10*x^3*z^9-30*y^4+30";
+    string str = "x^2*20*z^3*-20*y^3+x^3+10*x^3*z^9-30*y^4+30";
     ASSERT_NO_THROW (Polinom pol(str));
 }
 
 TEST(Polinom, can_correct_create_this_parameters_string) {
-    string str = "x^2*20*z^3*(-20)*y^3+x^3+10*x^3*z^9-30*y^4+30";
+    string str = "x^2*20*z^3*-20*y^3+x^3+10*x^3*z^9-30*y^4+30";
     TRingHeadList<Monom> list;
-    list.pushBack(Monom(233, -400));
-    list.pushBack(Monom(300, 1));
     list.pushBack(Monom(309, 10));
+    list.pushBack(Monom(300, 1));
+    list.pushBack(Monom(233, -400));
     list.pushBack(Monom(40, -30));
-    list.setHead(Monom(0,30));
+    list.pushBack(Monom(0, 30));
     EXPECT_EQ(Polinom(list), Polinom(str));
 }
 
@@ -168,12 +168,13 @@ TEST(Polinom, correct_division_polinom)
 
 TEST(Polinom, correct_product_polinom)
 {
-    Monom m(4, 10);
-    Monom resm(8, 100);
+    Monom m(2, 10);
+    Monom m1(20, 20);
 
     Polinom a(m);
+    a.insert_monom(m1);
     Polinom s(m);
-    Polinom res(resm);
+    Polinom res("200*y^2*z^2+100*z^4");
 
     s = s * a;
     EXPECT_EQ(res, s);
@@ -184,7 +185,7 @@ TEST(Polinom, correct_summation_const)
     Monom c(0, 10);
     Polinom s(c);
     s = s + c;
-    EXPECT_EQ(20, s.getPolinom().getHead()->Data.GetConsts());
+    EXPECT_EQ(Polinom(Monom(0, 20)), s);
 }
 
 TEST(Polinom, correct_division_const)
@@ -192,7 +193,7 @@ TEST(Polinom, correct_division_const)
     Monom c(0, 10);
     Polinom s(c);
     s = s - c;
-    EXPECT_EQ(0, s.getPolinom().getHead()->Data.GetConsts());
+    EXPECT_EQ(Polinom(Monom(0, 0)), s);
 }
 
 TEST(Polinom, correct_product_const)
@@ -200,5 +201,5 @@ TEST(Polinom, correct_product_const)
     Monom c(0, 10);
     Polinom s(c);
     s = s * c;
-    EXPECT_EQ(100, s.getPolinom().getHead()->Data.GetConsts());
+    EXPECT_EQ(Polinom(Monom(0,100)), s);
 }

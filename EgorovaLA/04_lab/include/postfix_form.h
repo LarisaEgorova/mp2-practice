@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include "list_stack.h"
 #include <locale.h>
@@ -27,3 +27,4 @@ double calculate(TStack<double>*& st1,TStack<string>*& st2, map<string, double>&
 
 //На списках
 void manipulateList(const string& str1,map<string, double>& var);
+*/

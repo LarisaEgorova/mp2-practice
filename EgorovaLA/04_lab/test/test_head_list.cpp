@@ -108,7 +108,7 @@ TEST(THeadList, correct_use_the_assignment_operator)
 TEST(THeadList, correct_pushAfter)
 {
     THeadList<int> a(1);
-    a.pushAfter(10,1);
+    a.pushAfter(10, 1);
     TNode<int>* tmp = a.getPFirst()->pNext;
     EXPECT_EQ(10, tmp->Data);
 }
@@ -116,6 +116,6 @@ TEST(THeadList, correct_pushAfter)
 TEST(THeadList, correct_pushBefore)
 {
     THeadList<int> a(1);
-    a.pushBefore(10,1);
+    a.pushBefore(10, 1);
     EXPECT_EQ(10, a.getPFirst()->Data);
 }

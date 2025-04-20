@@ -1,4 +1,4 @@
-#include "postfix_form.h"
+/*#include "postfix_form.h"
 
 void menu() {
 	string str;
@@ -214,3 +214,4 @@ void manipulateList(const string& str1, map<string, double>&var) {
 }
 
 
+*/

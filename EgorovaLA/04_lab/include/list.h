@@ -20,14 +20,15 @@ protected:
     TNode<T>* pFirst;
     TNode<T>* pCurr;
     TNode<T>* pPrev;
-    TNode<T>* pStop;//в данном контексте указывает на последний узел
+    TNode<T>* pLast;//в данном контексте указывает на последний узел
+    TNode<T>* pStop;//следующий после pLast
 public:
-    TList() : pFirst(nullptr), pCurr(nullptr), pPrev(nullptr), pStop(nullptr) {}
+    TList() : pFirst(nullptr), pCurr(nullptr), pPrev(nullptr), pStop(nullptr), pLast(nullptr) {}
 
-    TList(const T& data) :pPrev(nullptr) {
+    TList(const T& data) :TList<T>() {
         pFirst = new TNode<T>(data);
         reset();
-        pStop = pFirst;
+        pLast = pFirst;
     }
 
     TList(const TList<T>& list) : TList<T>() {
@@ -35,62 +36,73 @@ public:
             pFirst = nullptr;
             return;
         }
-
-        pFirst = new TNode<T>(list.pFirst->Data);
-        reset();
-        pStop = pFirst;
-
-        TNode<T>* listcurr = list.pFirst;
-
-        while (listcurr != list.pStop) {
-            listcurr = listcurr->pNext;
-            next();
-            pCurr = new TNode<T>(listcurr->Data);
-            pStop = pCurr;
-            pPrev->pNext = pCurr;
-        }
-        reset();
+        copy(list);
     }
 
     ~TList() {
-        reset();
         if (pFirst == nullptr) {
             pStop = nullptr;
             return;
         }
-        if (IsEnded()) {
-            if (pFirst != nullptr) delete pFirst;
+        clear();
+    }
+
+
+    void copy(const TList<T>& list)
+    {
+        pFirst = new TNode<T>(list.pFirst->Data);
+
+        TNode<T>* listcurr = list.pFirst->pNext;
+
+        reset();
+        while (listcurr != list.pStop) {
+            next();
+            pCurr = new TNode<T>(listcurr->Data);
+            pPrev->pNext = pCurr;
+            listcurr = listcurr->pNext;
         }
+        pLast = pCurr;
+    }
+
+    void clear() {
+        reset();
+        if (pCurr == nullptr) return;
         while (!IsEnded())
         {
             next();
-            delete pFirst;
-            pFirst = pCurr;
+            delete pPrev;
+            pPrev = pCurr;
         }
         pFirst = nullptr;
+    }
+
+    void next() {
+        pPrev = pCurr;
+        pCurr = pCurr->pNext;
+    }
+
+    virtual void reset() {
+        pCurr = pFirst;
+        pPrev = nullptr;
+    }
+
+    bool IsEnded() {
+        return(pCurr == pStop);
     }
 
     const TList<T>& operator=(const TList& list) {
         if (this == &list) {
             return *this;
         }
-
-        this->~TList();
-
-        if (list.IsEmpty()) return *this;
-
-        TNode<T>* listcurr = list.pFirst;
-        if (list.pFirst == nullptr) return *this;
-        while (listcurr != list.pStop->pNext) {
-            pushBack(listcurr->Data);
-            listcurr = listcurr->pNext;
-        }
+        clear();
+        copy(list);
         return *this;
     }
 
     bool operator==(const TList<T>& list) const {
         TNode<T>* curr = pFirst;
         TNode<T>* listcurr = list.pFirst;
+
         while (listcurr != list.pStop) {
             if (curr->Data != listcurr->Data) {
                 return 0;
@@ -102,134 +114,93 @@ public:
     }
 
     virtual int size() const {
-        TNode<T>* curr = pFirst;//не использую pCurr т.к. метод константный
+        TNode<T>* curr = pFirst;
         int n = 0;
         while (curr != pStop) {
             n++;
             curr = curr->pNext;
         }
-        return n + 1;
+        return n;
     }
 
     virtual void pushFront(const T& data) {
-        TNode<T>* node = new TNode<T>(data);
         if (pFirst == nullptr) {
-            pFirst = node;
-            pStop = pFirst;
+            *this = TList<T>(data);
             return;
         }
-        if (node == nullptr) {
-            throw "node is empty";
-        }
+
+        TNode<T>* node = new TNode<T>(data);
+
         node->pNext = pFirst;
         pFirst = node;
     }
 
     virtual void pushBack(const T& data) {
-        TNode<T>* node = new TNode<T>(data);
         if (pFirst == nullptr) {
-            pFirst = node;
-            pStop = pFirst;
+            pushFront(data);
             return;
         }
-        if (node == nullptr) return;
 
-        pStop->pNext = node;
-        pStop = node;
+        TNode<T>* node = new TNode<T>(data);
+
+        pLast->pNext = node;
+        pLast = node;
     }
 
     virtual void PopBack() {
         if (IsEmpty()) throw "List is empty";
         reset();
-        if (IsEnded()) {
-            delete pFirst;
-            pFirst = nullptr;
-            pStop = nullptr;
-            return;
-        }
-        while (!IsEnded()) {
+        while (pCurr != pLast) {
             next();
         }
         delete pCurr;
         pPrev->pNext = nullptr;
-        pStop = pPrev;
+        pLast = pPrev;
     }
 
     virtual void PopFront() {
         if (IsEmpty()) throw "List is empty";
         reset();
-        if (IsEnded()) {
-            delete pFirst;
-            pFirst = nullptr;
-            pStop = nullptr;
-            return;
-        }
         next();
         delete pPrev;
         pFirst = pCurr;
     }
 
     virtual bool IsEmpty() const {
-        return pStop == nullptr;
+        return pFirst == nullptr;
     }
 
     TNode<T>* getPFirst() const {
         return pFirst;
     }
 
-    TNode<T>* getPStop() const {
-        return pStop;
-    }
-
-    TNode<T>* getPPrev() const {
-        return pPrev;
-    }
-
     TNode<T>* getPCurr() const {
         return pCurr;
+    }
+
+    TNode<T>* getPStop() const {
+        return pStop;
     }
 
     void setPFirst(const T& data) {
         pFirst = new TNode<T>(data);
     }
 
-    void setPStop(TNode<T>* node) {
-        pStop = node;
-    }
-
-    void setPCurr(TNode<T>* node) {
-        pCurr = node;
-    }
-
-    void next() {
-        pPrev = pCurr;
-        pCurr = pCurr->pNext;
-    }
-
-    virtual void reset() {//пригодится в кольцевых списках
-        pCurr = pFirst;
-        pPrev = nullptr;
-    }
-
-    bool IsEnded() {
-        return(pCurr == pStop);
-    }
-
-    bool find_elem(const T& key) { //по первому вхождению
-        reset(); 
-        if (pCurr == nullptr) return 0;
-        if (pCurr->Data == key) return 1;
-        while (!IsEnded()) {
-            if (pCurr->Data == key) return 1;
-            next();
+    TNode<T>* find_elem(const T& key) const { //по первому вхождению
+        TNode<T>* curr = pFirst;
+        while (curr != pStop) {
+            if (curr->Data == key) return curr;
+            curr = curr->pNext;
         }
-        return 0;
+        return nullptr;
     }
 
     virtual void pushBefore(const T& data, const T& place) {
-        if (!find_elem(place)) throw "Not found key";
+        pCurr = find_elem(place);
+        if (pCurr == nullptr) throw "Not found key";
 
         TNode<T>* node = new TNode<T>(data);
+
         if (pCurr == pFirst) {
             pFirst = node;
             pFirst->pNext = pCurr;
@@ -241,7 +212,7 @@ public:
     }
 
     virtual void pushAfter(const T& data, const T& place) {
-        find_elem(place);
+        pCurr = find_elem(place);
         if (pCurr == nullptr) throw "Not found key";
 
         TNode<T>* node = new TNode<T>(data);
@@ -249,16 +220,6 @@ public:
 
         pPrev->pNext = node;
         node->pNext = pCurr;
-        pStop = pStop->pNext;
-    }
-
-    const T getData(const T& key) {
-        find_elem(key);
-        return pCurr->Data;
-    }
-
-    const int getKey() {
-        find_elem(Data);
-        return pCurr->Data;
+        if (pLast == pPrev) pLast = node;
     }
 };

@@ -39,7 +39,7 @@ TEST(TList, correct_use_the_assignment_operator)
     EXPECT_TRUE(s == a);
 }
 
-TEST(TList, correct_get_head) {
+TEST(TList, correct_getPFirst) {
     TList<int> a(5);
     EXPECT_EQ(a.getPFirst()->Data, 5);
 }
@@ -55,8 +55,24 @@ TEST(TList, correct_push_back)
 {
     TList<int> a;
     a.pushBack(5);
+    a.pushBack(10);
+    EXPECT_EQ(10, a.getPFirst()->pNext->Data);
+}
+
+TEST(TList, correct_push_before)
+{
+    TList<int> a;
     a.pushBack(5);
-    EXPECT_EQ(5, a.getPFirst()->pNext->Data);
+    a.pushBefore(10, 5);
+    EXPECT_EQ(10, a.getPFirst()->Data);
+}
+
+TEST(TList, correct_push_after)
+{
+    TList<int> a;
+    a.pushBack(5);
+    a.pushAfter(10, 5);
+    EXPECT_EQ(10, a.getPFirst()->pNext->Data);
 }
 
 TEST(TList, correct_pop_back)
@@ -93,6 +109,13 @@ TEST(TList, correct_get_size)
     a.pushBack(5);
     a.pushBack(5);
     EXPECT_EQ(2, a.size());
+}
+TEST(TList, correct_get_data)
+{
+    TList<int> a;
+    a.pushBack(5);
+    a.pushBack(10);
+    EXPECT_EQ(10, a.find_elem(10)->Data);
 }
 TEST(TList, is_empty_false_when_list_no_empty)
 {

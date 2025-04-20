@@ -12,14 +12,17 @@ void menu() {
 		Polinom P;
 		double x, y, z;
 		double res;
-		int choice;
+		char choice;
 		cout << "Полином должен быть в виде: C1*x^a*y^b*z^c+...\n"
-			<<"Используйте '^' при возведении в степень и отрицательные константы в виде (-C1)\n\n";
+			<<"Используйте:\n-'^' при возведении в степень\n- Отрицательные константы в виде -C1" 
+			<<"\n- Ввод переменных 1ой в виде степени x^1, y^1, z^1\n\n";
 		cout << "Посчитать значение полинома (1)\nСложить 2 полинома и посчитать значение(2)\n" <<
 			"Вычесть 2 полинома и посчитать значение(3)\nУмножить 2 полинома и посчитать значение(4)\nВыйти(5)\n";
+
 		cin >> choice;
+
 		switch (choice) {
-		case 1:
+		case '1':
 			cout << "Введите полином: \n";
 			cin >> polinom1;
 			cout << "Введите значения x, y, z: \n";
@@ -27,7 +30,7 @@ void menu() {
 			res = polinom1(x, y, z);
 			cout << "Значение полинома: " << res <<"\n\n\n";
 			break;
-		case 2:
+		case '2':
 			cout << "Введите полином 1: \n";
 			cin >> polinom1;
 			cout << "Введите полином 2: \n";
@@ -39,7 +42,7 @@ void menu() {
 			res = P(x, y, z);
 			cout << "Значение полинома: " << res << "\n\n\n";
 			break;
-		case 3:
+		case '3':
 			cout << "Введите полином 1: \n";
 			cin >> polinom1;
 			cout << "Введите полином 2: \n";
@@ -51,7 +54,7 @@ void menu() {
 			res = P(x, y, z);
 			cout << "Значение полинома: " << res << "\n\n\n";
 			break;
-		case 4:
+		case '4':
 			cout << "Введите полином 1: \n";
 			cin >> polinom1;
 			cout << "Введите полином 2: \n";
@@ -62,11 +65,13 @@ void menu() {
 			cin >> x >> y >> z;
 			res = P(x, y, z);
 			cout << "Значение полинома: " << res << "\n\n\n";
-		case 5:
-			break;
+		case '5':
+			return;
 		default:
-			cout << "Не верный ввод\n";
-			continue;
+			cout << "Не верный ввод\n\n";
+			cin.clear();
+			cin.ignore(32767, '\n');
+			break;
 		}
 	}
 }

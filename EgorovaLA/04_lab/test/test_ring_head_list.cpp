@@ -34,7 +34,7 @@ TEST(TRingHeadList, correct_push_front)
 {
     TRingHeadList<int> a;
     a.pushFront(5);
-    EXPECT_EQ(5, a.getHead()->pNext->Data);
+    EXPECT_EQ(5, a.getPFirst()->Data);
 }
 
 TEST(TRingHeadList, correct_push_back)
@@ -51,7 +51,7 @@ TEST(TRingHeadList, correct_pop_back)
     a.pushBack(5);
     a.pushBack(10);
     a.PopBack();
-    EXPECT_EQ(5, a.getHead()->pNext->Data);
+    EXPECT_EQ(5, a.getPFirst()->Data);
 }
 
 TEST(TRingHeadList, correct_pop_front)
@@ -60,7 +60,7 @@ TEST(TRingHeadList, correct_pop_front)
     a.pushBack(10);
     a.pushBack(5);
     a.PopFront();
-    EXPECT_EQ(5, a.getHead()->pNext->Data);
+    EXPECT_EQ(5, a.getPFirst()->Data);
 }
 
 TEST(TRingHeadList, is_empty_false_when_list_no_empty)
@@ -81,7 +81,7 @@ TEST(TRingHeadList, correct_push_before)
     TRingHeadList<int> a;
     a.pushBack(5);
     a.pushBefore(10, 5);
-    EXPECT_EQ(10, a.getHead()->pNext->Data);
+    EXPECT_EQ(10, a.getPFirst()->Data);
 }
 
 TEST(TRingHeadList, correct_push_after)

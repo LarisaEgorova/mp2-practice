@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include <iostream>
 #include "stack.h"
@@ -53,3 +53,4 @@ public:
         return (stack == s.stack);
     }
 };
+*/
