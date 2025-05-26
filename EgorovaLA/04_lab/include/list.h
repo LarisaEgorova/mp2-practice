@@ -66,7 +66,6 @@ public:
             delete pPrev;
         }
         pFirst = nullptr;
-        //pLast->pNext = pStop;
     }
 
     void next() {
@@ -197,8 +196,7 @@ public:
     }
 
     TNode<T>* find_elem(const T& key) { //по первому вхождению
-        pPrev = nullptr;
-        pCurr = pFirst;
+        reset();
         while (pCurr != pStop) {
             if (pCurr->Data == key) return pCurr;
             pPrev = pCurr;

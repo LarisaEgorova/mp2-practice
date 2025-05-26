@@ -233,9 +233,8 @@ void Polinom::insert_monom(const Monom& data) {
             polinom.pushBefore(data, polinom.getPCurr()->Data);
             return;
         }
-        //OK
         if (data.key == polinom.getPCurr()->Data.key) {
-            polinom.getPCurr()->Data += data; // TODO: (x-1) and -x
+            polinom.getPCurr()->Data += data;
             if (polinom.getPCurr()->Data.consts == 0) polinom.PopCurr();
             return;
         }
@@ -259,15 +258,15 @@ Polinom Polinom::operator +(const Polinom& pol) const {
     }
     return result;
 }
-//OK
-Polinom Polinom::operator -(const Polinom& pol) const { // TODO: p1+p2*(-1.0)
+
+Polinom Polinom::operator -(const Polinom& pol) const {
     Polinom result(*this);
     Polinom copypol = pol;
     result = result + copypol * (-1.0);
     return result;
 }
 
-Polinom Polinom::operator *(const Polinom& pol) const { // TODO: use while (p.monon) {+= polinom * monom}
+Polinom Polinom::operator *(const Polinom& pol) const {
     Polinom result;
     Polinom copypol(pol);
     Polinom copythis(*this);
@@ -275,64 +274,51 @@ Polinom Polinom::operator *(const Polinom& pol) const { // TODO: use while (p.mo
     copypol.polinom.reset();
 
     while (!copypol.polinom.IsEnded()) {
-        if (copypol.polinom.getPCurr()->Data.consts != 0) {
-            Monom m = copypol.polinom.getPCurr()->Data;
-            result = result + copythis * m;
-            copypol.polinom.next();
-        }
-        else copypol.polinom.next();
+        Monom m = copypol.polinom.getPCurr()->Data;
+        result = result + copythis * m;
+        copypol.polinom.next();
     }
 
     return result;
 }
 
 //This monoms
-//OK
-Polinom Polinom::operator +(const Monom& monom) const { // TODO: use insert
+
+Polinom Polinom::operator +(const Monom& monom) const {
     Polinom result(*this);
     result.insert_monom(monom);
     return result;
 }
-//OK
-Polinom Polinom::operator -(const Monom& monom) const { // TODO: p+m*(-1.0)
+Polinom Polinom::operator -(const Monom& monom) const {
     Polinom result(*this);
     result = result + monom * (-1.0);
     return result;
 }
-//OK
-Polinom Polinom::operator *(const Monom& monom) {// TODO: while () умножение мононов на моном
+Polinom Polinom::operator *(const Monom& monom) {
     Polinom result;
     Polinom copypol(*this);
 
     copypol.polinom.reset();
 
     while (!copypol.polinom.IsEnded()) {
-        if (copypol.polinom.getPCurr()->Data.consts != 0) {
-            result.insert_monom(copypol.polinom.getPCurr()->Data * monom);
-            copypol.polinom.next();
-        }
-        else copypol.polinom.next();
+        result.insert_monom(copypol.polinom.getPCurr()->Data * monom);
+        copypol.polinom.next();
     }
     return result;
 }
 
-// TODO: polinom +-* const
-//This consts
-//OK
 Polinom Polinom::operator +(double C) const {
     Polinom result(*this);
     Monom mon(0, C);
     result.insert_monom(mon);
     return result;
 }
-//OK
 Polinom Polinom::operator -(double C) const {
     Polinom result(*this);
     Monom mon(0, C);
     result = result + mon * (-1.0);
     return result;
 }
-//OK
 Polinom Polinom::operator *(double C) {
     Polinom result(*this);
     Monom mon(0, C);

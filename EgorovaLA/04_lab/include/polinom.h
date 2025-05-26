@@ -52,7 +52,7 @@ struct Monom {
         }
         if ((m.consts != 0) && (m.consts != 1)) {
             if (m.consts < 0) out << "(" << m.consts << ")";
-            else out << m.consts<< "*";
+            else out << m.consts;
 
         }
         if (m.consts != 0) {
@@ -92,26 +92,18 @@ public:
     //This polinoms
 
     Polinom operator +(const Polinom& pol) const;
-    //OK // TODO: p1+p2*(-1.0)
     Polinom operator -(const Polinom& pol) const;
-    //OK // TODO: use while (p.monon) {+= polinom * monom}
     Polinom operator *(const Polinom& pol) const;
 
     //This monoms
-    //OK // TODO: use insert
     Polinom operator +(const Monom& monom) const;
-    //OK // TODO: p+m*(-1.0)
     Polinom operator -(const Monom& monom) const;
-    //OK // TODO: while () умножение мононов на моном
     Polinom operator *(const Monom& monom);
 
-    // TODO: polinom +-* const
     //This consts
-    //OK
+
     Polinom operator +(double C) const;
-    //OK
     Polinom operator -(double C) const;
-    //OK
     Polinom operator *(double C);
 
     friend istream& operator >> (istream& in, Polinom& p) {
